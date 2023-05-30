@@ -1,10 +1,15 @@
-package com.springinaction.tacocloud;
+package com.springinaction.tacocloud.web;
 
+import com.springinaction.tacocloud.Ingredient;
 import com.springinaction.tacocloud.Ingredient.Type;
+import com.springinaction.tacocloud.Taco;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Arrays;
@@ -15,6 +20,15 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/design")
 public class DesignTacoController {
+    @PostMapping
+    public String processDesign(@Valid Taco design, Errors errors) {
+        if (errors.hasErrors()) {
+            return "design";
+        }
+        log.info("Processing design: " + design);
+        return "redirect:/orders/current";
+    }
+
     @GetMapping
     public String showDesignForm(Model model) {
         List<Ingredient> ingredients = Arrays.asList(
